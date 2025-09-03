@@ -8,9 +8,21 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "posts#index"
 
+  # namespace :api do
+  #   namespace :v1 do
+  #     get 'hello', to: 'hello#index'
+  #   end
+  # end
+
   namespace :api do
-    namespace :v1 do
-      get 'hello', to: 'hello#index'
-    end
+    get  "/videos", to: "videos#index"
+    get  "/videos/tags", to: "videos#tags"
+    get  "/videos/gen", to: "videos#gen"
+    post "/videos", to: "videos#register"
+
+    get  "/users", to: "users#index"
+    get  "/users/gen", to: "users#gen"
+    post "/users", to: "users#register"
   end
+
 end
