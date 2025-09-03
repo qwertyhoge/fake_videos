@@ -15,14 +15,21 @@ Rails.application.routes.draw do
   # end
 
   namespace :api do
-    get  "/videos", to: "videos#index"
-    get  "/videos/tags", to: "videos#tags"
-    get  "/videos/gen", to: "videos#gen"
-    post "/videos", to: "videos#register"
+    get    "/videos",     to: "videos#index"
+    get    "/videos/:id"  to: "videos#show"
+    post   "/videos",     to: "videos#create"
+    patch  "/videos/:id", to: "videos#update"
+    delete "/videos/:id", to: "videos#destroy"
 
-    get  "/users", to: "users#index"
-    get  "/users/gen", to: "users#gen"
-    post "/users", to: "users#register"
+    get    "/users",      to: "users#index"
+    get    "/users/:id"   to: "users#show"
+    post   "/users",      to: "users#create"
+    patch  "/users/:id",  to: "users#update"
+    delete "/users/:id",  to: "users#destroy"
+  
+    get    "/tags",       to: "tags#index"
+    post   "/tags",       to: "tags#create"
+    delete "/tags/:id",   to: "tags#destroy"
   end
 
 end
