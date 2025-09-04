@@ -4,7 +4,7 @@ import Video from "@/type/Video";
 import User from "@/type/User";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 
 interface Props{
     params: {videoId: string};
@@ -14,6 +14,7 @@ export default function UserPage(props: Props){
     const [video, setVideo] = useState<Video | null>(null);
     const [uploader, setUploader] = useState<User | null>(null);
     const [notFoundError, setNotFoundError] = useState<boolean>(false);
+    const router = useRouter();
     
     const url = `http://localhost:3000/api/videos/${props.params.videoId}`;
 
@@ -36,8 +37,7 @@ export default function UserPage(props: Props){
         }
 
         const updateRate = async (newRate: number) => { 
-            const res = await fetch(url, 
-                {
+            const res = await fetch(url, {
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json'
@@ -58,7 +58,16 @@ export default function UserPage(props: Props){
         const res = await updateRate(newRate);
 
         setVideo(await res.json());
-    }
+    };
+
+    const handleDelete = async () => {
+        const res = await fetch(url, {
+            method: 'DELETE'
+        });
+        if(res.status === 200){
+            router.push('/');
+        }
+    };
 
     useEffect(() => {
         fetchData();
@@ -114,7 +123,7 @@ export default function UserPage(props: Props){
                     </button>
                 </div>
                 <div>
-                    <button
+                    <button onClick={handleDelete}
                         className="m-4 p-2 bg-red-600 text-white rounded">
                         Delete this information
                     </button>
