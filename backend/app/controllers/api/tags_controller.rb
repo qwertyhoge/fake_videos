@@ -12,7 +12,7 @@ module Api
             end
         end
         def destroy
-            @tag = Tag.find(params[:id])
+            @tag = Tag.find(params[:id]).destroy
             render json: @tag
         end
 
