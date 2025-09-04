@@ -19,14 +19,14 @@ module Api
         end
         def update
             if @video.update(video_params)
-                render json: @video
+                render json: @video.as_json(include: :tags)
             else
                 render :edit, status: :unprocessable_entity
             end
         end
         def destroy
             @video.destroy
-            render json: @video
+            render json: @video.as_json(include: :tags)
         end
 
         private
@@ -35,7 +35,7 @@ module Api
             end
 
             def video_params
-                params.require(:video).permit(:user_id, :title, :length, tag_ids: [])
+                params.require(:video).permit(:user_id, :title, :length, :rate, tag_ids: [])
             end
 
     end

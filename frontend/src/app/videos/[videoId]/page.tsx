@@ -29,6 +29,37 @@ export default function UserPage(props: Props){
         }
     };
 
+
+    const handleLikes = async (newRate: number) => {
+        if(!video){
+            return;
+        }
+
+        const updateRate = async (newRate: number) => { 
+            const res = await fetch(url, 
+                {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        video: {
+                            title: video.title,
+                            length: video.length,
+                            user_id: video.userId,
+                            rate: newRate,
+                            tag_ids: video.tags.map(t => t.id)
+                        }
+                    })
+                });
+
+            return res;
+        }
+        const res = await updateRate(newRate);
+
+        setVideo(await res.json());
+    }
+
     useEffect(() => {
         fetchData();
     }, []);
@@ -73,11 +104,11 @@ export default function UserPage(props: Props){
                 </p>
                 <div className="m-4 p-2">
                     
-                    <button
+                    <button onClick={() => handleLikes(video?.rate === 1? 0: 1)}
                         className={`m-2 py-1 px-2 border rounded ${video.rate === 1 && "bg-blue-500 text-white"}`}>
                         👍Like
                     </button>
-                    <button
+                    <button onClick={() => handleLikes(video?.rate === -1? 0: -1)}
                         className={`m-2 py-1 px-2 border rounded ${video.rate === -1 && "bg-blue-500 text-white"}`}>
                         👎Dislike
                     </button>
