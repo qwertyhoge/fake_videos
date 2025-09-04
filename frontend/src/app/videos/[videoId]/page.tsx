@@ -99,7 +99,7 @@ export default function UserPage(props: Props){
                         {uploader.name}</Link>
                     : "<unknown user>"}
                 </p>
-                <p>
+                <div>
                     tags: 
                     {video.tags.length > 0?
                     <ul className="ml-4">
@@ -110,7 +110,7 @@ export default function UserPage(props: Props){
                             {t.name}
                         </li>)}
                     </ul>: " None"}
-                </p>
+                </div>
                 <div className="m-4 p-2">
                     
                     <button onClick={() => handleLikes(video?.rate === 1? 0: 1)}

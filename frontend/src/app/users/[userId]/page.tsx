@@ -4,7 +4,7 @@ import User from "@/type/User";
 import Video from "@/type/Video";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 
 interface Props{
     params: {userId: string};
@@ -14,16 +14,27 @@ export default function UserPage(props: Props){
     const [user, setUser] = useState<User | null>(null);
     const [notFoundError, setNotFoundError] = useState<boolean>(false);
     const [ownedVideos, setOwnedVideos] = useState<Video[]>([]);
+    const router = useRouter();
+    const url = `http://localhost:3000/api/users/${props.params.userId}`;
     
     const fetchData = async () => {
-        const res = await fetch(`http://localhost:3000/api/users/${props.params.userId}`);
+        const res = await fetch(url);
         if(res.status === 404){
             setNotFoundError(true);
         }else{
             const data = await res.json();
             setUser(data);
-            const videos = await (await fetch(`http://localhost:3000/api/users/${props.params.userId}/videos`)).json();
+            const videos = await (await fetch(`${url}/videos`)).json();
             setOwnedVideos(videos);
+        }
+    };
+    
+    const handleDelete = async () => {
+        const res = await fetch(url, {
+            method: 'DELETE'
+        });
+        if(res.status === 200){
+            router.push('/');
         }
     };
 
@@ -66,6 +77,11 @@ export default function UserPage(props: Props){
                 className="m-4 p-2 border border-blue-600 bg-blue-500 rounded text-white"
             >
                 Generate a random video
+            </button>
+
+            <button onClick={handleDelete}
+                className="m-4 p-2 bg-red-600 text-white rounded">
+                Delete this user
             </button>
         </>
     ): "loading..."
