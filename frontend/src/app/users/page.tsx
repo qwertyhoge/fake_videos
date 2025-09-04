@@ -3,6 +3,7 @@
 import User from "@/type/User"
 import Link from "next/link";
 import { useState, useEffect } from "react"
+import { generateRandomUser } from "../lib/generateRandomData";
 
 export default function UsersIndex(){
     const [users, setUsers] = useState<User[]>([]);
@@ -15,6 +16,22 @@ export default function UsersIndex(){
     useEffect(() => {
         fetchData();
     }, []);
+
+    const handleGenerate = async () => {
+        const randomUser = await generateRandomUser();
+
+        const created = await fetch('http://localhost:3000/api/users/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                user: randomUser
+            })
+        });
+
+        setUsers([...users, await created.json()]);
+    };
 
     return (<>
         <Link 
@@ -41,6 +58,7 @@ export default function UsersIndex(){
         </ul>
         <button
             className="m-4 p-2 border border-blue-600 bg-blue-500 rounded text-white"
+            onClick={handleGenerate}
         >
             Generate a random user
         </button>

@@ -3,6 +3,7 @@
 import Tag from "@/type/Tag"
 import Link from "next/link";
 import { useState, useEffect } from "react"
+import { generateRandomTag } from "../lib/generateRandomData";
 
 export default function TagsIndex(){
     const [tags, setTags] = useState<Tag[]>([]);
@@ -23,7 +24,23 @@ export default function TagsIndex(){
         if(res.status === 200){
             setTags(tags.filter(t => t.id !== data.id));
         }
-    }
+    };
+
+    const handleGenerate = async ()  => {
+        const randomTag = await generateRandomTag();
+        
+        const created = await fetch(`http://localhost:3000/api/tags/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                tag: randomTag
+            })
+        });
+
+        setTags([...tags, await created.json()]);
+    };
 
     return (<>
         <Link 
@@ -51,6 +68,7 @@ export default function TagsIndex(){
         </ul>
         <button
             className="m-4 p-2 border border-blue-600 bg-blue-500 rounded text-white"
+            onClick={handleGenerate}
         >
             Generate a random tag
         </button>
