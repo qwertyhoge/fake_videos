@@ -3,10 +3,10 @@ module Api
         before_action :set_video, only: %i[ show update destroy]
 
         def index
-            render json: Video.all
+            render json: Video.all.as_json(include: :tags)
         end
         def show
-            render json: Video.find(params[:id])
+            render json: Video.find(params[:id]).as_json(include: :tags)
         end
         def create
             @video = Video.new(video_params)
