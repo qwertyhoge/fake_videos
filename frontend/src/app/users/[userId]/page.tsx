@@ -5,6 +5,7 @@ import Video from "@/type/Video";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { notFound, useRouter } from "next/navigation";
+import { generateRandomVideo } from "@/app/lib/generateRandomData";
 
 interface Props{
     params: {userId: string};
@@ -46,6 +47,21 @@ export default function UserPage(props: Props){
         notFound();
     }
 
+    const handleGenerate = async () => {
+        const randomVideo = await generateRandomVideo();
+        const created = await fetch("http://localhost:3000/api/videos/", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                video: randomVideo
+            })
+        });
+
+        setOwnedVideos([...ownedVideos, await created.json()]);
+    };
+
     return user ? (
         <>
             <Link 
@@ -75,11 +91,13 @@ export default function UserPage(props: Props){
             
             <button
                 className="m-4 p-2 border border-blue-600 bg-blue-500 rounded text-white"
+                onClick={handleGenerate}
             >
                 Generate a random video
             </button>
 
-            <button onClick={handleDelete}
+            <button
+                onClick={handleDelete}
                 className="m-4 p-2 bg-red-600 text-white rounded">
                 Delete this user
             </button>
