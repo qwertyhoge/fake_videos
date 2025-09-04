@@ -1,6 +1,6 @@
 module Api
     class UsersController < ApplicationController
-        before_action :set_user, only: %i[ show update destroy]
+        before_action :set_user, only: %i[ show update destroy videos]
 
         def index
             render json: User.all
@@ -27,6 +27,10 @@ module Api
         def destroy
             @user.destroy
             render json: @user
+        end
+        
+        def videos
+            render json: @user.videos
         end
 
         private

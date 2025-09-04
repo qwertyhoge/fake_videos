@@ -26,6 +26,8 @@ Rails.application.routes.draw do
     post   "/users",      to: "users#create"
     patch  "/users/:id",  to: "users#update"
     delete "/users/:id",  to: "users#destroy"
+
+    get    "/users/:id/videos", to: "users#videos"
   
     get    "/tags",       to: "tags#index"
     post   "/tags",       to: "tags#create"
